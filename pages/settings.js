@@ -12,18 +12,24 @@ var data = {
   pageAlert: null,
   pageType: 'list',
   configInfo: null,
-  isBlock: null,
-  isBlockAll: null,
+  isEnabled: null,
+  isAllChannels: null,
+  channels: null,
+  blockChannels: null,
+  isAllAreas: null,
+  areas: null,
   blockAreas: null,
   blockMethod: null,
   redirectUrl: null,
   warning: null,
   password: null,
-  areas: null,
 };
 
 var methods = {
   loadSettings: function() {
+    this.isEnabled = !!this.configInfo.isEnabled;
+    this.isAllChannels = !!this.configInfo.isAllChannels;
+    this.isAllAreas = !!this.configInfo.isAllAreas;
     this.blockMethod = this.configInfo.blockMethod ? this.configInfo.blockMethod : 'RedirectUrl';
     this.redirectUrl = this.configInfo.redirectUrl ? this.configInfo.redirectUrl : '';
     this.warning = this.configInfo.warning ? this.configInfo.warning : '';
@@ -40,6 +46,8 @@ var methods = {
       $this.loadSettings();
       $this.areas = res.areas;
       $this.blockAreas = res.blockAreas;
+      $this.channels = res.channels;
+      $this.blockChannels = res.blockChannels;
     }).catch(function (error) {
       $this.pageAlert = utils.getPageAlert(error);
     }).then(function () {
@@ -53,10 +61,13 @@ var methods = {
     var payload = {
       type: this.pageType
     };
-    if (this.pageType === 'isBlock') {
-      payload.isBlock = this.isBlock;
-    } else if (this.pageType === 'isBlockAll') {
-      payload.isBlockAll = this.isBlockAll;
+    if (this.pageType === 'isEnabled') {
+      payload.isEnabled = this.isEnabled;
+    } else if (this.pageType === 'isAllChannels') {
+      payload.isAllChannels = this.isAllChannels;
+      payload.blockChannels = this.blockChannels;
+    } else if (this.pageType === 'isAllAreas') {
+      payload.isAllAreas = this.isAllAreas;
       payload.blockAreas = this.blockAreas;
     } else if (this.pageType === 'blockMethod') {
       payload.blockMethod = this.blockMethod;
@@ -73,6 +84,8 @@ var methods = {
       $this.loadSettings();
       $this.areas = res.areas;
       $this.blockAreas = res.blockAreas;
+      $this.channels = res.channels;
+      $this.blockChannels = res.blockChannels;
 
       $this.pageType = 'list';
       swal2({

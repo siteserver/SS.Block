@@ -49,10 +49,24 @@ namespace SS.Block
         private void Service_AfterStlParse(object sender, ParseEventArgs e)
         {
             var configInfo = GetConfig(e.SiteId);
-            if (configInfo.IsBlock)
+            if (!configInfo.IsEnabled) return;
+
+            var isChannel = false;
+            if (configInfo.IsAllChannels)
             {
-                e.ContentBuilder.Replace("<body", @"<body style=""display: none""");
+                isChannel = true;
             }
+            else
+            {
+                if (configInfo.BlockChannels != null && configInfo.BlockChannels.Contains(e.ChannelId))
+                {
+                    isChannel = true;
+                }
+            }
+
+            if (!isChannel) return;
+
+            e.ContentBuilder.Replace("<body", @"<body style=""display: none""");
 
             var pluginUrl = Context.PluginApi.GetPluginUrl(Utils.PluginId);
             e.HeadCodes[Utils.PluginId] = $@"
@@ -81,7 +95,10 @@ namespace SS.Block
             var configInfo = CacheUtils.Get<ConfigInfo>(cacheKey);
             if (configInfo != null) return configInfo;
 
-            configInfo = Context.ConfigApi.GetConfig<ConfigInfo>(Utils.PluginId, siteId) ?? new ConfigInfo();
+            configInfo = Context.ConfigApi.GetConfig<ConfigInfo>(Utils.PluginId, siteId) ?? new ConfigInfo
+            {
+                IsAllChannels = true
+            };
             CacheUtils.Insert(cacheKey, configInfo, 1);
 
             return configInfo;

@@ -34,7 +34,7 @@ namespace SS.Block.Core
 
         public bool IsAllowed(int siteId, ConfigInfo config, AreaInfo areaInfo, string sessionId)
         {
-            if (!config.IsBlock) return true;
+            if (!config.IsEnabled) return true;
 
             if (!string.IsNullOrEmpty(sessionId))
             {
@@ -54,7 +54,7 @@ namespace SS.Block.Core
             }
 
             bool isAllowed;
-            if (config.IsBlockAll)
+            if (config.IsAllAreas)
             {
                 isAllowed = isMatch;
             }

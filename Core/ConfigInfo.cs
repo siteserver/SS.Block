@@ -4,9 +4,13 @@ namespace SS.Block.Core
 {
     public class ConfigInfo
     {
-        public bool IsBlock { get; set; }
+        public bool IsEnabled { get; set; }
 
-        public bool IsBlockAll { get; set; }
+        public bool IsAllChannels { get; set; }
+
+        public List<int> BlockChannels { get; set; }
+
+        public bool IsAllAreas { get; set; }
 
         public List<int> BlockAreas { get; set; }
 

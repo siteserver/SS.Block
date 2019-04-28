@@ -51,20 +51,29 @@
               <tr>
                 <td width="35%">拦截状态</td>
                 <td width="65%">
-                  <a href="javascript:;" v-on:click="pageType = 'isBlock'" class="editable">
-                    <span v-if="configInfo.isBlock">启用拦截</span>
-                    <span v-if="!configInfo.isBlock">禁用拦截</span>
+                  <a href="javascript:;" v-on:click="pageType = 'isEnabled'" class="editable">
+                    <span v-if="configInfo.isEnabled">启用拦截</span>
+                    <span v-if="!configInfo.isEnabled">禁用拦截</span>
+                  </a>
+                </td>
+              </tr>
+              <tr>
+                <td>拦截页面</td>
+                <td>
+                  <a href="javascript:;" v-on:click="pageType = 'isAllChannels'" class="editable">
+                    {{ configInfo.isAllChannels ? '拦截所有页面' : '拦截以下页面：' }}
+                    <span v-for="blockChannel in blockChannels" :key="blockChannels.key" class="text-warning mr-2" style="border-bottom: none !important;"><b>{{ blockChannel.value }}</b></span>
                   </a>
                 </td>
               </tr>
               <tr>
                 <td>拦截区域</td>
                 <td>
-                  <a v-if="blockAreas && blockAreas.length > 0" href="javascript:;" v-on:click="pageType = 'isBlockAll'" class="editable">
-                    {{ configInfo.isBlockAll ? '除以下区域外，拦截所有其他区域：' : '拦截以下区域：' }}
+                  <a v-if="blockAreas && blockAreas.length > 0" href="javascript:;" v-on:click="pageType = 'isAllAreas'" class="editable">
+                    {{ configInfo.isAllAreas ? '除以下区域外，拦截所有其他区域：' : '拦截以下区域：' }}
                     <span v-for="blockArea in blockAreas" :key="blockAreas.key" class="text-warning mr-2" style="border-bottom: none !important;"><b>{{ blockArea.value }}</b></span>
                   </a>
-                  <a v-else href="javascript:;" v-on:click="pageType = 'isBlockAll'" class="editable">
+                  <a v-else href="javascript:;" v-on:click="pageType = 'isAllAreas'" class="editable">
                     点击设置
                   </a>
                 </td>
@@ -92,20 +101,38 @@
             </tbody>
           </table>
         </template>
-        <template v-else-if="pageType === 'isBlock'">
+        <template v-else-if="pageType === 'isEnabled'">
           <div class="form-group">
             <label>拦截状态</label>
-            <select v-model="isBlock" class="form-control">
+            <select v-model="isEnabled" class="form-control">
               <option v-bind:value="true">启用拦截</option>
               <option v-bind:value="false">禁用拦截</option>
             </select>
             <small class="form-text text-muted">设置拦截状态</small>
           </div>
         </template>
-        <template v-else-if="pageType === 'isBlockAll'">
+        <template v-else-if="pageType === 'isAllChannels'">
+          <div class="form-group">
+            <label>拦截页面</label>
+            <select v-model="isAllChannels" class="form-control">
+              <option :value="true">拦截所有页面</option>
+              <option :value="false">拦截以下页面</option>
+            </select>
+          </div>
+          <div v-if="!isAllChannels" class="form-group">
+            <label>
+              拦截以下页面
+            </label>
+
+            <multiselect v-model="blockChannels" :options="channels" :multiple="true" :close-on-select="false" :clear-on-select="true" :preserve-search="true" placeholder="选择栏目" label="value" track-by="value" :preselect-first="false">
+            </multiselect>
+
+          </div>
+        </template>
+        <template v-else-if="pageType === 'isAllAreas'">
           <div class="form-group">
             <label>拦截方式</label>
-            <select v-model="isBlockAll" class="form-control">
+            <select v-model="isAllAreas" class="form-control">
               <option :value="false">拦截以下区域</option>
               <option :value="true">除以下区域外，拦截所有其他区域</option>
             </select>
