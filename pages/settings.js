@@ -12,18 +12,22 @@ var data = {
   pageAlert: null,
   pageType: 'list',
   configInfo: null,
-  areas: null,
+  isBlock: null,
+  isBlockAll: null,
   blockAreas: null,
+  blockMethod: null,
+  redirectUrl: null,
+  warning: null,
+  password: null,
+  areas: null,
 };
 
 var methods = {
-  getConfigInfo: function(configInfo) {
-    configInfo.blockMethod = configInfo.blockMethod ? configInfo.blockMethod : 'RedirectUrl';
-    configInfo.redirectUrl = configInfo.redirectUrl ? configInfo.redirectUrl : '';
-    configInfo.warning = configInfo.warning ? configInfo.warning : '';
-    configInfo.password = configInfo.password ? configInfo.password : '';
-
-    return configInfo;
+  loadSettings: function() {
+    this.blockMethod = this.configInfo.blockMethod ? this.configInfo.blockMethod : 'RedirectUrl';
+    this.redirectUrl = this.configInfo.redirectUrl ? this.configInfo.redirectUrl : '';
+    this.warning = this.configInfo.warning ? this.configInfo.warning : '';
+    this.password = this.configInfo.password ? this.configInfo.password : '';
   },
 
   apiGetSettings: function () {
@@ -32,7 +36,8 @@ var methods = {
     $api.get('').then(function (response) {
       var res = response.data;
 
-      $this.configInfo = $this.getConfigInfo(res.value);
+      $this.configInfo = res.value;
+      $this.loadSettings();
       $this.areas = res.areas;
       $this.blockAreas = res.blockAreas;
     }).catch(function (error) {
@@ -49,22 +54,23 @@ var methods = {
       type: this.pageType
     };
     if (this.pageType === 'isBlock') {
-      payload.isBlock = this.configInfo.isBlock;
+      payload.isBlock = this.isBlock;
     } else if (this.pageType === 'isBlockAll') {
-      payload.isBlockAll = this.configInfo.isBlockAll;
+      payload.isBlockAll = this.isBlockAll;
       payload.blockAreas = this.blockAreas;
     } else if (this.pageType === 'blockMethod') {
-      payload.blockMethod = this.configInfo.blockMethod;
-      payload.redirectUrl = this.configInfo.redirectUrl;
-      payload.warning = this.configInfo.warning;
-      payload.password = this.configInfo.password;
+      payload.blockMethod = this.blockMethod;
+      payload.redirectUrl = this.redirectUrl;
+      payload.warning = this.warning;
+      payload.password = this.password;
     }
 
     utils.loading(true);
     $api.post('', payload).then(function (response) {
       var res = response.data;
 
-      $this.configInfo = $this.getConfigInfo(res.value);
+      $this.configInfo = res.value;
+      $this.loadSettings();
       $this.areas = res.areas;
       $this.blockAreas = res.blockAreas;
 

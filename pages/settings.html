@@ -95,7 +95,7 @@
         <template v-else-if="pageType === 'isBlock'">
           <div class="form-group">
             <label>拦截状态</label>
-            <select v-model="configInfo.isBlock" class="form-control">
+            <select v-model="isBlock" class="form-control">
               <option v-bind:value="true">启用拦截</option>
               <option v-bind:value="false">禁用拦截</option>
             </select>
@@ -105,7 +105,7 @@
         <template v-else-if="pageType === 'isBlockAll'">
           <div class="form-group">
             <label>拦截方式</label>
-            <select v-model="configInfo.isBlockAll" class="form-control">
+            <select v-model="isBlockAll" class="form-control">
               <option :value="false">拦截以下区域</option>
               <option :value="true">除以下区域外，拦截所有其他区域</option>
             </select>
@@ -126,34 +126,34 @@
               拦截方式
               <small v-if="errors.has('blockMethod')" class="text-danger">{{ errors.first('blockMethod') }}</small>
             </label>
-            <select v-model="configInfo.blockMethod" name="blockMethod" key="blockMethod" data-vv-as="拦截方式" v-validate="'required'" :class="{'is-invalid': errors.has('blockMethod') }" class="form-control">
+            <select v-model="blockMethod" name="blockMethod" key="blockMethod" data-vv-as="拦截方式" v-validate="'required'" :class="{'is-invalid': errors.has('blockMethod') }" class="form-control">
               <option value="RedirectUrl">转至指定网址</option>
               <option value="Warning">显示拦截信息</option>
               <option value="Password">输入密码验证</option>
             </select>
           </div>
-          <div v-if="configInfo.blockMethod === 'RedirectUrl'" class="form-group">
+          <div v-if="blockMethod === 'RedirectUrl'" class="form-group">
             <label>
               转至指定网址
               <small v-if="errors.has('redirectUrl')" class="text-danger">{{ errors.first('redirectUrl') }}</small>
             </label>
-            <input v-model="configInfo.redirectUrl" name="redirectUrl" key="redirectUrl" data-vv-as="转至指定网址" v-validate="'required'" :class="{'is-invalid': errors.has('redirectUrl') }"
+            <input v-model="redirectUrl" name="redirectUrl" key="redirectUrl" data-vv-as="转至指定网址" v-validate="'required'" :class="{'is-invalid': errors.has('redirectUrl') }"
               type="text" class="form-control" />
           </div>
-          <div v-if="configInfo.blockMethod === 'Warning'" class="form-group">
+          <div v-if="blockMethod === 'Warning'" class="form-group">
             <label>
                 显示拦截信息
               <small v-if="errors.has('warning')" class="text-danger">{{ errors.first('warning') }}</small>
             </label>
-            <input v-model="configInfo.warning" name="warning" key="warning" data-vv-as="显示拦截信息" v-validate="'required'" :class="{'is-invalid': errors.has('warning') }"
+            <input v-model="warning" name="warning" key="warning" data-vv-as="显示拦截信息" v-validate="'required'" :class="{'is-invalid': errors.has('warning') }"
               type="text" class="form-control" />
           </div>
-          <div v-if="configInfo.blockMethod === 'Password'" class="form-group">
+          <div v-if="blockMethod === 'Password'" class="form-group">
             <label>
                 输入密码验证
               <small v-if="errors.has('password')" class="text-danger">{{ errors.first('password') }}</small>
             </label>
-            <input v-model="configInfo.password" name="password" key="password" data-vv-as="输入密码验证" v-validate="'required'" :class="{'is-invalid': errors.has('password') }"
+            <input v-model="password" name="password" key="password" data-vv-as="输入密码验证" v-validate="'required'" :class="{'is-invalid': errors.has('password') }"
               type="text" class="form-control" />
           </div>
         </template>
