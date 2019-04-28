@@ -17,13 +17,22 @@ var data = {
 };
 
 var methods = {
-  getConfig: function () {
+  getConfigInfo: function(configInfo) {
+    configInfo.blockMethod = configInfo.blockMethod ? configInfo.blockMethod : 'RedirectUrl';
+    configInfo.redirectUrl = configInfo.redirectUrl ? configInfo.redirectUrl : '';
+    configInfo.warning = configInfo.warning ? configInfo.warning : '';
+    configInfo.password = configInfo.password ? configInfo.password : '';
+
+    return configInfo;
+  },
+
+  apiGetSettings: function () {
     var $this = this;
 
     $api.get('').then(function (response) {
       var res = response.data;
 
-      $this.configInfo = res.value;
+      $this.configInfo = $this.getConfigInfo(res.value);
       $this.areas = res.areas;
       $this.blockAreas = res.blockAreas;
     }).catch(function (error) {
@@ -33,7 +42,7 @@ var methods = {
     });
   },
 
-  apiSubmit: function () {
+  apiSubmitSettings: function () {
     var $this = this;
 
     var payload = {
@@ -55,7 +64,7 @@ var methods = {
     $api.post('', payload).then(function (response) {
       var res = response.data;
 
-      $this.configInfo = res.value;
+      $this.configInfo = $this.getConfigInfo(res.value);
       $this.areas = res.areas;
       $this.blockAreas = res.blockAreas;
 
@@ -80,7 +89,7 @@ var methods = {
 
     this.$validator.validate().then(function (result) {
       if (result) {
-        $this.apiSubmit();
+        $this.apiSubmitSettings();
       }
     });
   },
@@ -98,6 +107,6 @@ var $vue = new Vue({
   data: data,
   methods: methods,
   created: function () {
-    this.getConfig();
+    this.apiGetSettings();
   }
 });
