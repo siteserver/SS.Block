@@ -99,7 +99,7 @@ namespace SS.Block
             {
                 IsAllChannels = true
             };
-            CacheUtils.Insert(cacheKey, configInfo, 1);
+            CacheUtils.Insert(cacheKey, configInfo, 24);
 
             return configInfo;
         }

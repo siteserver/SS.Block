@@ -54,8 +54,7 @@ namespace SS.Block.Controllers
                 var configInfo = Main.GetConfig(siteId);
                 if (configInfo.Password == password)
                 {
-                    sessionId = Guid.NewGuid().ToString();
-                    CacheUtils.Insert(sessionId, true, 1);
+                    sessionId = Context.UtilsApi.Encrypt(password);
                 }
 
                 return Ok(new

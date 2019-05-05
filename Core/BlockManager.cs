@@ -32,13 +32,13 @@ namespace SS.Block.Core
                 @"(^192\.168\.([0-9]|[0-9][0-9]|[0-2][0-5][0-5])\.([0-9]|[0-9][0-9]|[0-2][0-5][0-5])$)|(^172\.([1][6-9]|[2][0-9]|[3][0-1])\.([0-9]|[0-9][0-9]|[0-2][0-5][0-5])\.([0-9]|[0-9][0-9]|[0-2][0-5][0-5])$)|(^10\.([0-9]|[0-9][0-9]|[0-2][0-5][0-5])\.([0-9]|[0-9][0-9]|[0-2][0-5][0-5])\.([0-9]|[0-9][0-9]|[0-2][0-5][0-5])$)");
         }
 
-        public bool IsAllowed(int siteId, ConfigInfo config, AreaInfo areaInfo, string sessionId)
+        public bool IsAllowed(int siteId, ConfigInfo configInfo, AreaInfo areaInfo, string sessionId)
         {
-            if (!config.IsEnabled) return true;
+            if (!configInfo.IsEnabled) return true;
 
-            if (!string.IsNullOrEmpty(sessionId))
+            if (configInfo.BlockMethod == nameof(configInfo.Password) && !string.IsNullOrEmpty(sessionId))
             {
-                if (CacheUtils.Exists(sessionId))
+                if (configInfo.Password == Context.UtilsApi.Decrypt(sessionId))
                 {
                     return true;
                 }
@@ -47,14 +47,14 @@ namespace SS.Block.Core
             var isMatch = false;
             if (areaInfo != null)
             {
-                if (config.BlockAreas != null && config.BlockAreas.Contains(areaInfo.GeoNameId))
+                if (configInfo.BlockAreas != null && configInfo.BlockAreas.Contains(areaInfo.GeoNameId))
                 {
                     isMatch = true;
                 }
             }
 
             bool isAllowed;
-            if (config.IsAllAreas)
+            if (configInfo.IsAllAreas)
             {
                 isAllowed = isMatch;
             }
